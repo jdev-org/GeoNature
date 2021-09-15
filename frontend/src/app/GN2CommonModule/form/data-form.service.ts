@@ -336,7 +336,7 @@ export class DataFormService {
    *
    * @param params: dict of paramters
    */
-  getAcquisitionFrameworks(params = {}) {    
+  getAcquisitionFrameworks(params = {}) {
     let queryString: HttpParams = new HttpParams();
     for (let key in params) {
       queryString = queryString.set(key, params[key])
@@ -597,7 +597,7 @@ export class DataFormService {
     }
     return this._http.get<any>(`${AppConfig.API_ENDPOINT}/gn_commons/additional_fields`,
      {params: queryString}).map(additionalFields => {
-      return additionalFields.map(data => {        
+      return additionalFields.map(data => {
         return {
           "id_field": data.id_field,
           "attribut_label": data.field_label,
@@ -618,10 +618,21 @@ export class DataFormService {
           ...data.additional_attributes
         }
       })
-        
-     });
+    });
+  }
 
+  getRedListValues(statusType: String) {
+    return this._http.get<any>(`${AppConfig.API_TAXHUB}/bdc_statuts/red_lists/${statusType}`);
+  }
+
+  getStatusType(statusTypes: String[]) {
+    let queryString: HttpParams = new HttpParams();
+    if (statusTypes) {
+      queryString = queryString.set('codes', statusTypes.join(','));
+    }
+    return this._http.get<any>(`${AppConfig.API_TAXHUB}/bdc_statuts/status_types`, {
+      params: queryString
+    });
   }
 
 }
-

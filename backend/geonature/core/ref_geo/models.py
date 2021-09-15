@@ -66,3 +66,10 @@ class LiMunicipalities(DB.Model):
     insee_commune_nouvelle = DB.Column(DB.Unicode)
     meta_create_date = DB.Column(DB.DateTime)
     meta_update_date = DB.Column(DB.DateTime)
+
+@serializable
+class CorAreaStatus(DB.Model):
+    __tablename__ = "cor_area_status"
+    __table_args__ = {"schema": "ref_geo"}
+    cd_sig = DB.Column(DB.Unicode, primary_key=True)
+    id_area = DB.Column(DB.Integer, ForeignKey("ref_geo.l_areas.id_area"), primary_key=True)
