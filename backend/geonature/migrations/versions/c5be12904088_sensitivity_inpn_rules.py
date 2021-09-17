@@ -9,8 +9,10 @@ from shutil import copyfileobj
 
 from geonature.migrations.utils import (
     logger,
+)
+
+from utils_flask_sqla.migrations.utils import (
     open_remote_file,
-    delete_area_with_type,
 )
 
 # revision identifiers, used by Alembic.

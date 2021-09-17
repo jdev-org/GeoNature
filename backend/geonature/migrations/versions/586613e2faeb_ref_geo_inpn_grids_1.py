@@ -11,9 +11,12 @@ from geonature.migrations.utils import (
     logger,
     schema,
     create_temporary_grids_table,
-    open_remote_file,
     delete_area_with_type,
     insert_grids_and_drop_temporary_table
+)
+
+from utils_flask_sqla.migrations.utils import (
+    open_remote_file,
 )
 
 

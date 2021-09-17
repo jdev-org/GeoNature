@@ -105,9 +105,10 @@ function gn_psql() {
 }
 
 
+# write_log "Creating 'public' functions..."
+# gn_psql -f data/core/public.sql
+geonature db upgrade sql_utils@head
 
-write_log "Creating 'public' functions..."
-gn_psql -f data/core/public.sql
 
 if [ "$install_usershub_schema" = true ];
  then
@@ -165,6 +166,9 @@ gn_psql -f tmp/taxhub/taxhubdata_atlas.sql
 write_log "Creating a view that represents the taxonomic hierarchy..."
 gn_psql -f tmp/taxhub/materialized_views.sql
 
+geonature db stamp 9c2c0254aadc  # mark schema as in version 1.8.1
+# geonature db upgrade taxonomie@head  # upgrade schema to last taxonomie revision
+
 echo "Download and extract Habref file..."
 wget -nc https://geonature.fr/data/inpn/habitats/HABREF_50.zip -P tmp/habref
 unzip -u tmp/habref/HABREF_50.zip -d tmp/habref
@@ -182,22 +186,27 @@ write_log "Inserting INPN habitat data..."
 sudo -u postgres -s psql -d $db_name -v ON_ERROR_STOP=ON -f tmp/habref/data_inpn_habref.sql |& tee -a "${LOG_FILE}"  # FIXME remove sudo
 
 
-echo "Getting 'ref_nomenclature' schema creation scripts..."
-wget -nc https://raw.githubusercontent.com/PnX-SI/Nomenclature-api-module/$nomenclature_release/data/nomenclatures.sql -P tmp/nomenclatures
-wget -nc https://raw.githubusercontent.com/PnX-SI/Nomenclature-api-module/$nomenclature_release/data/data_nomenclatures.sql -P tmp/nomenclatures
-wget -nc https://raw.githubusercontent.com/PnX-SI/Nomenclature-api-module/$nomenclature_release/data/nomenclatures_taxonomie.sql -P tmp/nomenclatures
-wget -nc https://raw.githubusercontent.com/PnX-SI/Nomenclature-api-module/$nomenclature_release/data/data_nomenclatures_taxonomie.sql -P tmp/nomenclatures
+# echo "Getting 'ref_nomenclature' schema creation scripts..."
+# nomenclature_data_url="https://raw.githubusercontent.com/PnX-SI/Nomenclature-api-module/$nomenclature_release/src/pypnnomenclature/migrations/data"
+# wget -nc ${nomenclature_data_url}/nomenclatures.sql -P tmp/nomenclatures
+# wget -nc ${nomenclature_data_url}/data_nomenclatures.sql -P tmp/nomenclatures
+# wget -nc ${nomenclature_data_url}/nomenclatures_taxonomie.sql -P tmp/nomenclatures
+# wget -nc ${nomenclature_data_url}/data_nomenclatures_taxonomie.sql -P tmp/nomenclatures
 
 write_log "Creating 'ref_nomenclatures' schema"
 
-gn_psql -f tmp/nomenclatures/nomenclatures.sql
-gn_psql -f tmp/nomenclatures/nomenclatures_taxonomie.sql
+geonature db upgrade ref_nomenclatures@head
+geonature db upgrade nomenclatures_taxonomie@head
+# gn_psql -f tmp/nomenclatures/nomenclatures.sql
+# gn_psql -f tmp/nomenclatures/nomenclatures_taxonomie.sql
 
 write_log "Inserting 'ref_nomenclatures' data..."
 
-sed -i "s/MYDEFAULTLANGUAGE/$default_language/g" tmp/nomenclatures/data_nomenclatures.sql
-gn_psql -f tmp/nomenclatures/data_nomenclatures.sql
-gn_psql -f tmp/nomenclatures/data_nomenclatures_taxonomie.sql
+# sed -i "s/MYDEFAULTLANGUAGE/$default_language/g" tmp/nomenclatures/data_nomenclatures.sql
+# gn_psql -f tmp/nomenclatures/data_nomenclatures.sql -v MYDEFAULTLANGUAGE=${default_language}
+# gn_psql -f tmp/nomenclatures/data_nomenclatures_taxonomie.sql
+geonature db upgrade nomenclatures_data_inpn@head
+geonature db upgrade nomenclatures_taxonomie_data@head
 
 write_log "Creating 'gn_commons' schema..."
 gn_psql -f data/core/commons.sql -v MYLOCALSRID=$srid_local

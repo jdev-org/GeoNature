@@ -10,8 +10,11 @@ from shutil import copyfileobj
 from geonature.migrations.utils import (
     logger,
     schema,
-    open_remote_file,
     delete_area_with_type,
+)
+
+from utils_flask_sqla.migrations.utils import (
+    open_remote_file,
 )
 
 
