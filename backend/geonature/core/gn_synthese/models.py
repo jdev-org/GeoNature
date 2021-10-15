@@ -17,7 +17,7 @@ from utils_flask_sqla_geo.serializers import geoserializable, shapeserializable
 from pypn_habref_api.models import Habref
 
 from geonature.core.gn_meta.models import TDatasets, TAcquisitionFramework
-from geonature.core.ref_geo.models import LAreas
+from geonature.core.ref_geo.models import LAreas, CorAreaStatus
 from geonature.core.ref_geo.models import LiMunicipalities
 from geonature.core.gn_commons.models import THistoryActions, TValidations, TMedias
 from geonature.utils.env import DB
@@ -352,13 +352,23 @@ class SyntheseOneRecord(VSyntheseDecodeNomenclatures):
     source = DB.relationship(
         "TSources", primaryjoin=(TSources.id_source == id_source), foreign_keys=[id_source],
     )
+
     areas = DB.relationship(
         "LAreas",
         secondary=corAreaSynthese,
     )
+
+    areas_status = DB.relationship(
+        "CorAreaStatus",
+        secondary=corAreaSynthese,
+        primaryjoin=(CorAreaSynthese.id_synthese == id_synthese),
+        secondaryjoin=(CorAreaSynthese.id_area == CorAreaStatus.id_area),
+    )
+
     datasets = DB.relationship(
         "TDatasets", primaryjoin=(TDatasets.id_dataset == id_dataset), foreign_keys=[id_dataset],
     )
+
     acquisition_framework = DB.relationship(
         "TAcquisitionFramework",
         uselist=False,

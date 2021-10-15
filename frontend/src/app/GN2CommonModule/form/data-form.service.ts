@@ -143,8 +143,14 @@ export class DataFormService {
     });
   }
 
-  getTaxonInfo(cd_nom: number) {
-    return this._http.get<Taxon>(`${AppConfig.API_TAXHUB}/taxref/${cd_nom}`);
+  getTaxonInfo(cd_nom: number, areasStatus?: Array<string>) {
+    let query_string = new HttpParams();
+    if (areasStatus) {
+      query_string = query_string.append('areas_status', areasStatus.join(','));
+    }
+    return this._http.get<Taxon>(`${AppConfig.API_TAXHUB}/taxref/${cd_nom}`, {
+      params: query_string
+    });
   }
 
   getTaxonAttributsAndMedia(cd_nom: number, id_attributs?: Array<number>) {
@@ -348,7 +354,7 @@ export class DataFormService {
     );
   }
 
-  getAcquisitionFrameworksForSelect(searchTerms = {}) {    
+  getAcquisitionFrameworksForSelect(searchTerms = {}) {
     let queryString: HttpParams = new HttpParams();
     for (let key in searchTerms) {
       queryString = queryString.set(key, searchTerms[key])
@@ -365,7 +371,7 @@ export class DataFormService {
    * @param id_af: id of acquisition_framework
    * @params params : get parameters
    */
-  getAcquisitionFramework(id_af, params?: ParamsDict) {    
+  getAcquisitionFramework(id_af, params?: ParamsDict) {
     let queryString: HttpParams = new HttpParams();
     for (let key in params) {
       if(isArray(params[key])) {

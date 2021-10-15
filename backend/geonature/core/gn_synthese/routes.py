@@ -273,6 +273,7 @@ def get_one_synthese(id_synthese):
         )
 
         synthese_as_dict["actors"] = data[1]
+        synthese_as_dict["areas_status"] = [d['cd_sig'] for d in synthese_as_dict["areas_status"]]
         return jsonify(synthese_as_dict)
     except exc.NoResultFound:
         return None
