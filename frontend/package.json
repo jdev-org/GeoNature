@@ -65,7 +65,7 @@
     "zone.js": "^0.11.4"
   },
   "devDependencies": {
-    "cypress": "^9.2.1",
+    "cypress": "^11.0.1",
     "cypress-promise": "^1.1.0",
     "prettier": "^2.5.0"
   }
