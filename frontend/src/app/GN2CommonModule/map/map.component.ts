@@ -166,9 +166,13 @@ export class MapComponent implements OnInit {
         map.addLayer(baseControl[basemap.name]);
       }
     });
-    // overlays
+    // overlays layers
     const overlaysLayers = this.mapService.createOverLayers();
-    this.mapService.layerControl = L.control.layers(baseControl, overlaysLayers);
+    // create control layers
+    this.mapService.layerControl = L.control.layers(baseControl, overlaysLayers, {
+      sortLayers: false, // When false, layers will keep the order in which they were added to the control
+      collapsed: true, //If true, the control will be collapsed into an icon and expanded on mouse hover
+    });
     this.mapService.layerControl.addTo(map);
 
     this.mapService.setMap(map);
