@@ -236,7 +236,7 @@ def get_areas():
     format = request.args.get("format", default="", type=str)
     # format features as geojson according to standard
     if format == "geojson":
-        response = to_geojson(response)
+        return to_geojson(response)
     return jsonify(response)
 
 
