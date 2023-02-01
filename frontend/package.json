@@ -63,6 +63,6 @@
     "cypress": "^9.2.1",
     "cypress-promise": "^1.1.0",
     "prettier": "^2.5.0",
-    "typescript": "4.9.4"
+    "typescript": "4.9.5"
   }
 }
