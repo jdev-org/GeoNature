@@ -60,7 +60,7 @@
     "@types/leaflet-draw": "^0.4.13",
     "@types/leaflet.markercluster": "^1.4.0",
     "@types/node": "^18.0.0",
-    "cypress": "^9.2.1",
+    "cypress": "^12.6.0",
     "cypress-promise": "^1.1.0",
     "prettier": "^2.5.0",
     "typescript": "4.9.4"
